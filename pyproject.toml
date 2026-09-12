@@ -1,0 +1,51 @@
+[project]
+name = "theseus"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "Jordan Lewis", email = "to.jordan.lewis@gmail.com" }
+]
+requires-python = ">=3.13"
+dependencies = [
+    "pandas>=3.0.5",
+    "scikit-learn>=1.9.1",
+    "statsmodels>=0.15.0",
+]
+
+[project.scripts]
+theseus = "theseus:main"
+
+[build-system]
+requires = ["uv_build>=0.12.5,<0.13.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "coverage>=7.16.0",
+    "mypy>=2.3.1",
+    "poe>=0.1.0",
+    "pytest>=9.1.1",
+    "pytest-cov>=7.1.0",
+    "pytest-mock>=3.15.1",
+    "ruff>=0.16.7",
+]
+
+[tool.poe.tasks]
+format = "uv run ruff format ."
+check = "uv run ruff check ."
+fmt = ["format", "check"]
+test = "uv run pytest ."
+
+[tool.poe.tasks.coverage]
+sequence = [
+    {cmd = "uv run pytest --cov=. --cov-report term-missing --cov-report lcov --no-cov-on-fail --cov-fail-under 95.63"},
+    {cmd = "uv run coverage xml"},
+]
+
+[tool.coverage.report]
+omit = [
+    "app.py",
+    "main.py",
+    "*/tests/*"
+]
